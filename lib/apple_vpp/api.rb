@@ -157,11 +157,11 @@ module AppleVPP
       refresh_url_service
 
       body = {
-        'userId' => user_id,
+        'userId'          => user_id,
         'clientUserIdStr' => client_user_id_str,
-        'adamId', => adam_id,
-        'licenseId', => license_id,
-        'pricingParam' => pricing_param
+        'adamId'          => adam_id,
+        'licenseId'       => license_id,
+        'pricingParam'    => pricing_param
       }
 
       Request.submit( UrlService.instance.associate_license_srv_url, @s_token, body )
