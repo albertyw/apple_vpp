@@ -13,11 +13,16 @@ module AppleVPP
     def associate_license_with_user(params = {})
       require_params [[:user_id, :client_user_id_str], [:adam_id, :license_id]], params
 
-      resp = associate_vpp_license_with_vpp_user( params[:user_id],
-                                                  params[:client_user_id_str],
-                                                  params[:adam_id],
-                                                  params[:license_id],
-                                                  params[:pricing_param] )
+      body = {
+        'userId'          => params[:user_id],
+        'clientUserIdStr' => params[:client_user_id_str],
+        'adamId'          => params[:adam_id],
+        'licenseId'       => params[:license_id],
+        'pricingParam'    => params[:pricing_param]
+      }
+
+      refresh_url_service
+      resp = Request.submit( UrlService.instance.associate_license_srv_url, @s_token, body )
 
       license = Model::License.new_from_json resp['license']
       user    = Model::User.new_from_json    resp['user']
@@ -28,7 +33,12 @@ module AppleVPP
     def disassociate_license_from_user(params = {})
       require_params :license_id, params
 
-      resp = disassociate_vpp_license_from_vpp_user( params[:license_id] )
+      body = {
+        'licenseId' => params[:license_id]
+      }
+
+      refresh_url_service
+      resp = Request.submit UrlService.instance.disassociate_license_srv_url, @s_token, body
 
       license = Model::License.new_from_json resp['license']
       user    = Model::User.new_from_json    resp['user']
@@ -37,7 +47,13 @@ module AppleVPP
     end
 
     def client_config(params = {})
-      resp = vpp_client_config(params[:client_context], params[:apn_token])
+      body = {
+        'clientContext' => params[:client_context],
+        'apnToken'      => params[:apn_token]
+      }
+
+      refresh_url_service
+      resp = Request.submit UrlService.instance.client_config_srv_url, @s_token, body
 
       resp['clientContext']
     end
@@ -45,7 +61,14 @@ module AppleVPP
     def edit_user(params = {})
       require_params [[:user_id, :client_user_id_str]], params
 
-      resp = edit_vpp_user(params[:user_id], params[:client_user_id_str], params[:email])
+      body = {
+        'userId'          => params[:user_id],
+        'clientUserIdStr' => params[:client_user_id_str],
+        'email'           => params[:email]
+      }
+
+      refresh_url_service
+      resp = Request.submit UrlService.instance.edit_user_srv_url, @s_token, body
 
       Model::User.new_from_json resp['user']
     end
@@ -54,9 +77,18 @@ module AppleVPP
       licenses = []
       batch_token = nil
 
+      refresh_url_service
+
       begin
 
-        resp = get_vpp_licenses( batch_token, nil, params[:adam_id], params[:pricing_param] )
+        body = {
+          'batchToken'          => batch_token,
+          'sinceModifiedToken'  => params[:since_modified_token],
+          'adamId'              => params[:adam_id],
+          'pricingParam'        => params[:pricing_param]
+        }
+
+        resp = Request.submit( UrlService.instance.get_licenses_srv_url, @s_token, body )
 
         if resp['licenses']
           resp['licenses'].each do |i|
@@ -74,7 +106,16 @@ module AppleVPP
     def find_user(params = {})
       require_params [[:user_id, :client_user_id_str]], params
      
-      resp = get_vpp_user(params[:user_id], params[:client_user_id_str], params[:its_id_hash])
+      refresh_url_service
+
+      body = {
+        'userId'          => params[:user_id], 
+        'clientUserIdStr' => params[:client_user_id_str], 
+        'itsIdHash'       => params[:its_id_hash]
+      }
+
+      refresh_url_service
+      resp = Request.submit( UrlService.instance.get_user_srv_url, @s_token, body )
 
       build_user_and_licenses( resp['user'] )
     end
@@ -82,7 +123,13 @@ module AppleVPP
     def register_user(params = {})
       require_params :client_user_id_str, params
 
-      resp = register_vpp_user( params[:client_user_id_str], params[:email] )
+      body = {
+        'clientUserIdStr' => params[:client_user_id_str],
+        'email'           => params[:email]
+      }
+
+      refresh_url_service
+      resp = Request.submit( UrlService.instance.register_user_srv_url, @s_token, body )
     
       Model::User.new resp['user']
     end
@@ -90,7 +137,13 @@ module AppleVPP
     def retire_user(params = {})
       require_params [[:user_id, :client_user_id_str]], params
 
-      resp = retire_vpp_user( params[:user_id], params[:client_user_id_str] )
+      body = {
+        'userId'          => params[:user_id],
+        'clientUserIdStr' => params[:client_user_id_str]
+      }
+
+      refresh_url_service
+      resp = Request.submit( UrlService.instance.retire_user_srv_url, @s_token, body)
 
       build_user_and_licenses( resp['user'] )
     end
@@ -99,9 +152,17 @@ module AppleVPP
       users = []
       batch_token = nil
 
+      refresh_url_service
+
       begin
 
-        resp = get_vpp_users( batch_token, nil, params[:include_retired] )
+        body = {
+          'batchToken'          => batch_token,
+          'sinceModifiedToken'  => params[:since_modified_token],
+          'includeRetired'      => params[:include_retired] ? 1 : nil
+        }
+
+        resp = Request.submit( UrlService.instance.get_users_srv_url, @s_token, body )
 
         if resp['users']
           resp['users'].each do |i|
@@ -119,6 +180,7 @@ module AppleVPP
     private
     
     # param_name_array is an array of required parameters. Include a sub-array of parameters for || requirement.
+
     def require_params param_name_array, params
       param_name_array.each do |param_names|
         param_names = [param_names] unless param_names.kind_of?(Array)
@@ -137,7 +199,6 @@ module AppleVPP
       end
     end
 
-
     def refresh_url_service
       UrlService.instance.refresh unless UrlService.instance.ready?
     end
@@ -151,117 +212,6 @@ module AppleVPP
       user_json['licenses'].each do |i|
         user.licenses << Model::License.new_from_json( i )
       end
-    end
-
-    # 
-    # Service Calls 
-    #
-
-    def associate_vpp_license_with_vpp_user( user_id, client_user_id_str, adam_id, license_id, pricing_param )
-      refresh_url_service
-
-      body = {
-        'userId'          => user_id,
-        'clientUserIdStr' => client_user_id_str,
-        'adamId'          => adam_id,
-        'licenseId'       => license_id,
-        'pricingParam'    => pricing_param
-      }
-
-      Request.submit( UrlService.instance.associate_license_srv_url, @s_token, body )
-    end
-
-    def disassociate_vpp_license_from_vpp_user( license_id )
-      refresh_url_service
-
-      body = {
-        'licenseId' => license_id
-      }
-
-      Request.submit UrlService.instance.disassociate_license_srv_url, @s_token, body
-    end
-
-    def edit_vpp_user(user_id , client_user_id_str, email)
-      refresh_url_service
-
-      body = {
-        'userId' => user_id,
-        'clientUserIdStr' => client_user_id_str,
-        'email' => email
-      }
-
-      Request.submit UrlService.instance.edit_user_srv_url, @s_token, body
-    end
-
-    def get_vpp_licenses(batch_token, since_modified_token, adam_id, pricing_param)
-      refresh_url_service
-
-      body = {
-        'batchToken'          => batch_token,
-        'sinceModifiedToken'  => since_modified_token,
-        'adamId'              => adam_id,
-        'pricingParam'        => pricing_param
-      }
-
-      Request.submit( UrlService.instance.get_licenses_srv_url, @s_token, body )
-    end
-
-    def get_vpp_user(user_id, client_user_id_str, its_id_hash)
-      refresh_url_service
-
-      body = {
-        'userId'          => user_id, 
-        'clientUserIdStr' => client_user_id_str, 
-        'itsIdHash'       => its_id_hash 
-      }
-
-      Request.submit( UrlService.instance.get_user_srv_url, @s_token, body )
-    end
-
-    def get_vpp_users(batch_token, since_modified_token, include_retired)
-      refresh_url_service
-
-      body = {
-        'batchToken'          => batch_token,
-        'sinceModifiedToken'  => since_modified_token
-      }
-
-      body['includeRetired'] = 1 if include_retired == true
-
-      Request.submit( UrlService.instance.get_users_srv_url, @s_token, body )
-    end
-
-    def register_vpp_user(client_user_id_str, email)
-      refresh_url_service
-
-      body = {
-        'clientUserIdStr' => client_user_id_str,
-        'email'           => email
-      }
-
-      Request.submit( UrlService.instance.register_user_srv_url, @s_token, body )
-    end
-
-    def retire_vpp_user(user_id, client_user_id_str)
-      refresh_url_service
-
-      body = {
-        'userId'          => user_id,
-        'clientUserIdStr' => client_user_id_str
-      }
-
-      Request.submit( UrlService.instance.retire_user_srv_url, @s_token, body)
-    end
-
-    def vpp_client_config(client_context, apn_token)
-      refresh_url_service
-
-      body = {
-        'clientContext' => client_context,
-        'apnToken'      => apn_token
-      }
-
-      Request.submit UrlService.instance.client_config_srv_url, @s_token, body
     end
 
   end
