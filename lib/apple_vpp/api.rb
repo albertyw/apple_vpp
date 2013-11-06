@@ -11,13 +11,7 @@ module AppleVPP
     end
 
     def associate_license_with_user(params = {})
-      unless params[:user_id] || params[:client_user_id_str]
-        raise ArgumentError, "user_id or client_user_id_str must be provided"
-      end
-
-      unless params[:adam_id] || params[:license_id]
-        raise ArgumentError, "adam_id or license_id must be provided"
-      end
+      require_params [[:user_id, :client_user_id_str], [:adam_id, :license_id]], params
 
       resp = associate_vpp_license_with_vpp_user( params[:user_id],
                                                   params[:client_user_id_str],
@@ -32,9 +26,7 @@ module AppleVPP
     end
 
     def disassociate_license_from_user(params = {})
-      unless params[:license_id]
-        raise ArgumentError, "license_id mst be provided"
-      end
+      require_params :license_id, params
 
       resp = disassociate_vpp_license_from_vpp_user( params[:license_id] )
 
@@ -51,9 +43,7 @@ module AppleVPP
     end
 
     def edit_user(params = {})
-      unless params[:user_id] || params[:client_user_id_str]
-        raise ArgumentError, "user_id or client_user_id_str must be specified"
-      end
+      require_params [[:user_id, :client_user_id_str]], params
 
       resp = edit_vpp_user(params[:user_id], params[:client_user_id_str], params[:email])
 
@@ -82,19 +72,15 @@ module AppleVPP
     end
 
     def find_user(params = {})
-      unless params[:user_id] || params[:client_user_id_str]
-        raise ArgumentError, "user_id or client_user_id_str must be provided"
-      end
-
+      require_params [[:user_id, :client_user_id_str]], params
+     
       resp = get_vpp_user(params[:user_id], params[:client_user_id_str], params[:its_id_hash])
 
       build_user_and_licenses( resp['user'] )
     end
 
     def register_user(params = {})
-      unless params[:client_user_id_str]
-        raise ArgumentError, "client_user_id_str must be provided"
-      end
+      require_params :client_user_id_str, params
 
       resp = register_vpp_user( params[:client_user_id_str], params[:email] )
     
@@ -102,9 +88,7 @@ module AppleVPP
     end
 
     def retire_user(params = {})
-      unless params[:user_id] || params[:client_user_id_str]
-        raise ArgumentError, "user_id or client_user_id_str must be provided"
-      end
+      require_params [[:user_id, :client_user_id_str]], params
 
       resp = retire_vpp_user( params[:user_id], params[:client_user_id_str] )
 
@@ -133,6 +117,26 @@ module AppleVPP
     end
 
     private
+    
+    # param_name_array is an array of required parameters. Include a sub-array of parameters for || requirement.
+    def require_params param_name_array, params
+      param_name_array.each do |param_names|
+        param_names = [param_names] unless param_names.kind_of?(Array)
+
+        param_found = false
+        param_names.each do |param_name|
+          if params[param_name]
+            param_found = true
+            break
+          end
+        end
+        
+        unless param_found
+          raise ArgumentError, "#{param_names.join(' or ')} must be provided"
+        end
+      end
+    end
+
 
     def refresh_url_service
       UrlService.instance.refresh unless UrlService.instance.ready?
@@ -177,7 +181,7 @@ module AppleVPP
       Request.submit UrlService.instance.disassociate_license_srv_url, @s_token, body
     end
 
-    def edit_vpp_user(user_id = nil, client_user_id_str = nil, email = nil)
+    def edit_vpp_user(user_id , client_user_id_str, email)
       refresh_url_service
 
       body = {
@@ -189,7 +193,7 @@ module AppleVPP
       Request.submit UrlService.instance.edit_user_srv_url, @s_token, body
     end
 
-    def get_vpp_licenses(batch_token = nil, since_modified_token = nil, adam_id = nil, pricing_param = nil)
+    def get_vpp_licenses(batch_token, since_modified_token, adam_id, pricing_param)
       refresh_url_service
 
       body = {
@@ -202,7 +206,7 @@ module AppleVPP
       Request.submit( UrlService.instance.get_licenses_srv_url, @s_token, body )
     end
 
-    def get_vpp_user(user_id = nil, client_user_id_str = nil, its_id_hash = nil)
+    def get_vpp_user(user_id, client_user_id_str, its_id_hash)
       refresh_url_service
 
       body = {
@@ -214,7 +218,7 @@ module AppleVPP
       Request.submit( UrlService.instance.get_user_srv_url, @s_token, body )
     end
 
-    def get_vpp_users(batch_token = nil, since_modified_token = nil, include_retired = nil)
+    def get_vpp_users(batch_token, since_modified_token, include_retired)
       refresh_url_service
 
       body = {
@@ -227,7 +231,7 @@ module AppleVPP
       Request.submit( UrlService.instance.get_users_srv_url, @s_token, body )
     end
 
-    def register_vpp_user(client_user_id_str, email = nil)
+    def register_vpp_user(client_user_id_str, email)
       refresh_url_service
 
       body = {
@@ -238,7 +242,7 @@ module AppleVPP
       Request.submit( UrlService.instance.register_user_srv_url, @s_token, body )
     end
 
-    def retire_vpp_user(user_id = nil, client_user_id_str = nil)
+    def retire_vpp_user(user_id, client_user_id_str)
       refresh_url_service
 
       body = {
