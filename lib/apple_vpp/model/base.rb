@@ -8,9 +8,9 @@ module AppleVPP
         end
       end
 
-      def new_from_json(json)
+      def self.new_from_json(json)
         w_underscored_keys = Hash[ json.collect { |k, v| [k.underscore, v] } ]
-        initialize w_underscored_keys
+        new w_underscored_keys
       end
 
     end

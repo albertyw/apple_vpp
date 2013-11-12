@@ -21,7 +21,7 @@ module AppleVPP
         'pricingParam'    => params[:pricing_param]
       }
 
-      resp = request UrlService.instance.associate_license_srv_url, body
+      resp = request :associate_license_srv_url, body
 
       license = Model::License.new_from_json resp['license']
       user    = Model::User.new_from_json    resp['user']
@@ -36,7 +36,7 @@ module AppleVPP
         'licenseId' => params[:license_id]
       }
 
-      resp = request UrlService.instance.disassociate_license_srv_url, body
+      resp = request :disassociate_license_srv_url, body
 
       license = Model::License.new_from_json resp['license']
       user    = Model::User.new_from_json    resp['user']
@@ -50,7 +50,7 @@ module AppleVPP
         'apnToken'      => params[:apn_token]
       }
 
-      resp = request UrlService.instance.client_config_srv_url, body
+      resp = request :client_config_srv_url, body
 
       resp['clientContext']
     end
@@ -64,7 +64,7 @@ module AppleVPP
         'email'           => params[:email]
       }
 
-      resp = request UrlService.instance.edit_user_srv_url, body
+      resp = request :edit_user_srv_url, body
 
       Model::User.new_from_json resp['user']
     end
@@ -82,7 +82,7 @@ module AppleVPP
           'pricingParam'        => params[:pricing_param]
         }
 
-        resp = request UrlService.instance.get_licenses_srv_url, body
+        resp = request :get_licenses_srv_url, body
 
         if resp['licenses']
           resp['licenses'].each do |i|
@@ -100,15 +100,13 @@ module AppleVPP
     def find_user(params = {})
       require_params [[:user_id, :client_user_id_str]], params
      
-      resp = request , body
-
       body = {
         'userId'          => params[:user_id], 
         'clientUserIdStr' => params[:client_user_id_str], 
         'itsIdHash'       => params[:its_id_hash]
       }
 
-      resp = request UrlService.instance.get_user_srv_url, body
+      resp = request :get_user_srv_url, body
 
       build_user_and_licenses( resp['user'] )
     end
@@ -121,9 +119,9 @@ module AppleVPP
         'email'           => params[:email]
       }
 
-      resp = request UrlService.instance.register_user_srv_url, body
+      resp = request :register_user_srv_url, body
     
-      Model::User.new resp['user']
+      Model::User.new_from_json resp['user']
     end
 
     def retire_user(params = {})
@@ -134,7 +132,7 @@ module AppleVPP
         'clientUserIdStr' => params[:client_user_id_str]
       }
 
-      resp = request UrlService.instance.retire_user_srv_url, body
+      resp = request :retire_user_srv_url, body
 
       build_user_and_licenses( resp['user'] )
     end
@@ -151,7 +149,7 @@ module AppleVPP
           'includeRetired'      => params[:include_retired] ? 1 : nil
         }
 
-        resp = request UrlService.instance.get_users_srv_url, body
+        resp = request :get_users_srv_url, body
 
         if resp['users']
           resp['users'].each do |i|
@@ -171,6 +169,8 @@ module AppleVPP
     # param_name_array is an array of required parameters. Include a sub-array of parameters for || requirement.
 
     def require_params param_name_array, params
+      param_name_array = [param_name_array] unless param_name_array.kind_of? Array 
+
       param_name_array.each do |param_names|
         param_names = [param_names] unless param_names.kind_of?(Array)
 
@@ -188,8 +188,10 @@ module AppleVPP
       end
     end
 
-    def request url, body
+    def request url_service_url, body
       UrlService.instance.refresh unless UrlService.instance.ready?
+
+      url = UrlService.instance.send( url_service_url )
 
       Request.submit url, @s_token, body
     end

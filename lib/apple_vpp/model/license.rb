@@ -10,7 +10,8 @@ module AppleVPP
                     :is_irrevocable,
                     :user_id,
                     :client_user_id_str,
-                    :its_id_hash
+                    :its_id_hash,
+                    :status
                     
     end
   end
