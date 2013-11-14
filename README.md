@@ -40,13 +40,13 @@ For information beyond what is included here, refer to the "Mobile Device Manage
 
 One of these is required: 
 
-* :user_id
-* :client_user_id_str
+* user_id
+* client_user_id_str
 
 One of these is required:
 
-* :adam_id
-* :license_id
+* adam_id
+* license_id
 
 Optional:
 
@@ -56,68 +56,68 @@ Optional:
 
 Optional:
 
-* :client_context
-* :apn_token
+* client_context
+* apn_token
 
 ## disassociate_license_from_user
 
 Required:
 
-* :license_id
+* license_id
 
 ## edit_user
 
 One of these is required:
 
-* :user_id
-* :client_user_id_str
+* user_id
+* client_user_id_str
 
 Optional:
 
-* :email
+* email
 
 ## get_licenses
 
 Optional:
 
-* :since_modified_token
-* :adam_id
-* :pricing_param
+* since_modified_token
+* adam_id
+* pricing_param
 
 ## get_user
 
 One of these is required:
 
-* :user_id
-* :client_user_id_str
+* user_id
+* client_user_id_str
 
 Optional:
 
-* :its_id_hash
+* its_id_hash
 
 ## get_users
 
 Optional:
 
-* :since_modified_token
-* :include_retired
+* since_modified_token
+* include_retired
 
 ## register_user
 
 Required:
 
-* :client_user_id_str
+* client_user_id_str
 
 Optional:
 
-* :email
+* email
 
 ## retire_user
 
 One of these is required:
 
-* :user_id
-* :client_user_id_str
+* user_id
+* client_user_id_str
 
 # Error Handling
 
@@ -129,7 +129,7 @@ AppleVPP::Error::Code#{error_code}
 
 A message will also be provided with the error.
 
-# Contributing
+## Contributing
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
