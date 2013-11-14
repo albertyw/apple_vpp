@@ -1,8 +1,9 @@
-# AppleVPP
+apple_vpp
+=========
 
 Ruby bindings for the Apple VPP Managed App License Distribution API.
 
-## Installation
+# Installation
 
 Add this line to your application's Gemfile:
 
@@ -16,7 +17,7 @@ Or install it yourself as:
 
     $ gem install apple_vpp
 
-## Usage
+# Usage
 
 Use the library like this:
 
@@ -31,11 +32,11 @@ c.edit_user user_id: users_json.first[:user_id],
             email:   'youremail@example.org' 	 
 ```
 
-## Methods
+# Methods
 
 For information beyond what is included here, refer to the "Mobile Device Management Protocol Reference" documentation on Apple's Developer site.
 
-### associate_license_with_user
+## associate_license_with_user
 
 One of these is required: 
 
@@ -51,20 +52,20 @@ Optional:
 
 * pricing_param
 
-### client_config
+## client_config
 
 Optional:
 
 * :client_context
 * :apn_token
 
-### disassociate_license_from_user
+## disassociate_license_from_user
 
 Required:
 
 * :license_id
 
-### edit_user
+## edit_user
 
 One of these is required:
 
@@ -75,7 +76,7 @@ Optional:
 
 * :email
 
-### get_licenses
+## get_licenses
 
 Optional:
 
@@ -83,7 +84,7 @@ Optional:
 * :adam_id
 * :pricing_param
 
-### get_user
+## get_user
 
 One of these is required:
 
@@ -94,14 +95,14 @@ Optional:
 
 * :its_id_hash
 
-### get_users
+## get_users
 
 Optional:
 
 * :since_modified_token
 * :include_retired
 
-### register_user
+## register_user
 
 Required:
 
@@ -111,14 +112,14 @@ Optional:
 
 * :email
 
-### retire_user
+## retire_user
 
 One of these is required:
 
 * :user_id
 * :client_user_id_str
 
-## Error Handling
+# Error Handling
 
 Should an error be reported by the Apple API service, the library will raise a custom error class that will correspond to the Apple error code like so:
 
@@ -128,7 +129,7 @@ AppleVPP::Error::Code#{error_code}
 
 A message will also be provided with the error.
 
-## Contributing
+# Contributing
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
