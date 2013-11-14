@@ -2,12 +2,13 @@ require 'rest_client'
 require 'json'
 
 module AppleVPP
-  class API
+  class Client
 
     attr_accessor :s_token
 
     def initialize(s_token)
       @s_token = s_token
+      @url_service = UrlService.new
     end
 
     def associate_license_with_user(params = {})
@@ -23,10 +24,7 @@ module AppleVPP
 
       resp = request :associate_license_srv_url, body
 
-      license = Model::License.new_from_json resp['license']
-      user    = Model::User.new_from_json    resp['user']
-
-      [license, user]
+      AppleSerializer.to_ruby [ resp['license'], resp['user'] ]
     end
 
     def disassociate_license_from_user(params = {})
@@ -38,10 +36,7 @@ module AppleVPP
 
       resp = request :disassociate_license_srv_url, body
 
-      license = Model::License.new_from_json resp['license']
-      user    = Model::User.new_from_json    resp['user']
-
-      [license, user]
+      AppleSerializer.to_ruby [ resp['license'], resp['user'] ]
     end
 
     def client_config(params = {})
@@ -52,7 +47,7 @@ module AppleVPP
 
       resp = request :client_config_srv_url, body
 
-      resp['clientContext']
+      AppleSerializer.to_ruby resp['clientContext']
     end
 
     def edit_user(params = {})
@@ -66,10 +61,10 @@ module AppleVPP
 
       resp = request :edit_user_srv_url, body
 
-      Model::User.new_from_json resp['user']
+      AppleSerializer.to_ruby resp['user']
     end
 
-    def licenses(params = {})
+    def get_licenses(params = {})
       licenses = []
       batch_token = nil
 
@@ -84,20 +79,16 @@ module AppleVPP
 
         resp = request :get_licenses_srv_url, body
 
-        if resp['licenses']
-          resp['licenses'].each do |i|
-            licenses << Model::License.new_from_json( i )
-          end
-        end
+        licenses.concat( resp['licenses'] ) if resp['licenses']
 
         batch_token = resp['batchToken']
 
       end while batch_token
 
-      licenses
+      AppleSerializer.to_ruby licenses
     end
 
-    def find_user(params = {})
+    def get_user(params = {})
       require_params [[:user_id, :client_user_id_str]], params
      
       body = {
@@ -108,7 +99,7 @@ module AppleVPP
 
       resp = request :get_user_srv_url, body
 
-      build_user_and_licenses( resp['user'] )
+      AppleSerializer.to_ruby resp['user']
     end
 
     def register_user(params = {})
@@ -121,7 +112,7 @@ module AppleVPP
 
       resp = request :register_user_srv_url, body
     
-      Model::User.new_from_json resp['user']
+      AppleSerializer.to_ruby resp['user']
     end
 
     def retire_user(params = {})
@@ -134,10 +125,10 @@ module AppleVPP
 
       resp = request :retire_user_srv_url, body
 
-      build_user_and_licenses( resp['user'] )
+      AppleSerializer.to_ruby resp['user']
     end
 
-    def users(params = {})
+    def get_users(params = {})
       users = []
       batch_token = nil
 
@@ -151,17 +142,13 @@ module AppleVPP
 
         resp = request :get_users_srv_url, body
 
-        if resp['users']
-          resp['users'].each do |i|
-            users << Model::User.new_from_json( i )
-          end
-        end
+        users.concat( resp['users'] ) if resp['users']
 
         batch_token = resp['batchToken']
 
       end while batch_token
 
-      users
+      AppleSerializer.to_ruby users
     end
 
     private
@@ -189,22 +176,11 @@ module AppleVPP
     end
 
     def request url_service_url, body
-      UrlService.instance.refresh unless UrlService.instance.ready?
+      @url_service.refresh unless @url_service.ready?
 
-      url = UrlService.instance.send( url_service_url )
+      url = @url_service.send( url_service_url )
 
       Request.submit url, @s_token, body
-    end
-
-    def build_user_and_licenses(user_json)
-      just_user_json = user_json.clone
-      just_user_json.delete('licenses')
-
-      user = Model::User.new_from_json( just_user_json )
-
-      user_json['licenses'].each do |i|
-        user.licenses << Model::License.new_from_json( i )
-      end
     end
 
   end

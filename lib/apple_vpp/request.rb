@@ -7,23 +7,17 @@ module AppleVPP
     def self.submit( url, s_token = nil, body = {} )
       body['sToken'] = s_token
       body.delete_if { |_k, v| v.nil? }
-
+      
       resp = RestClient.post url, body, content_type: :json
       json = JSON.parse(resp)
 
-      check_for_error(json)
+      if json['status'] == -1
+        raise (eval "AppleVPP::Error::Code#{json['errorNumber']}"), json['errorMessage'] 
+      end
 
       json
     end
 
-    private
-
-    def self.check_for_error(json)
-      if json['status'] == -1
-        raise StandardError, "error #{json['errorCode']}: #{json['errorMessage']}"
-      end
-    end
-    
   end
 end
 

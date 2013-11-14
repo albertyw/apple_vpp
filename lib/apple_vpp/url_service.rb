@@ -1,8 +1,5 @@
-require 'singleton'
-
 module AppleVPP
   class UrlService
-    include Singleton
 
     SERVICE_URL = 'https://vpp.itunes.apple.com/WebObjects/MZFinance.woa/wa/'
 
@@ -42,6 +39,10 @@ module AppleVPP
 
       resp['errorCodes'].each do |i|
         @errors[ i['errorNumber'] ] = i['errorMessage']
+      end
+
+      @errors.each do | number, _message| 
+        AppleVPP::Error.create_error_class( number )
       end
 
       @ready = true
