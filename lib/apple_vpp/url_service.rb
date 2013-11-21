@@ -41,10 +41,6 @@ module AppleVPP
         @errors[ i['errorNumber'] ] = i['errorMessage']
       end
 
-      @errors.each do | number, _message| 
-        AppleVPP::Error.create_error_class( number )
-      end
-
       @ready = true
     end
 
