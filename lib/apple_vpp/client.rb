@@ -67,6 +67,7 @@ module AppleVPP
     def get_licenses(params = {})
       licenses = []
       batch_token = nil
+      since_modified_token = nil
 
       begin
 
@@ -82,10 +83,14 @@ module AppleVPP
         licenses.concat( resp['licenses'] ) if resp['licenses']
 
         batch_token = resp['batchToken']
+        since_modified_token = resp['sinceModifiedToken']
 
       end while batch_token
 
-      AppleSerializer.to_ruby licenses
+      { 
+        licenses: AppleSerializer.to_ruby(licenses),
+        since_modified_token: since_modified_token
+      }
     end
 
     def get_user(params = {})
@@ -131,7 +136,7 @@ module AppleVPP
     def get_users(params = {})
       users = []
       batch_token = nil
-
+      since_modified_token = nil
       begin
 
         body = {
@@ -145,10 +150,12 @@ module AppleVPP
         users.concat( resp['users'] ) if resp['users']
 
         batch_token = resp['batchToken']
-
+        since_modified_token = resp['sinceModifiedToken']
       end while batch_token
-
-      AppleSerializer.to_ruby users
+      { 
+        licenses: AppleSerializer.to_ruby(users),
+        since_modified_token: since_modified_token
+      }
     end
 
     private
