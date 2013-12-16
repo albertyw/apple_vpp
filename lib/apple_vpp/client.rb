@@ -88,7 +88,7 @@ module AppleVPP
       end while batch_token
 
       { 
-        licenses: AppleSerializer.to_ruby(licenses),
+        licenses:             AppleSerializer.to_ruby(licenses),
         since_modified_token: since_modified_token
       }
     end
@@ -137,6 +137,7 @@ module AppleVPP
       users = []
       batch_token = nil
       since_modified_token = nil
+
       begin
 
         body = {
@@ -151,9 +152,11 @@ module AppleVPP
 
         batch_token = resp['batchToken']
         since_modified_token = resp['sinceModifiedToken']
+      
       end while batch_token
+
       { 
-        licenses: AppleSerializer.to_ruby(users),
+        users:                AppleSerializer.to_ruby(users),
         since_modified_token: since_modified_token
       }
     end

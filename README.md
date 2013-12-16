@@ -26,9 +26,9 @@ s_token = File.read './from_apple_portal.vpptoken'
 
 c = AppleVPP::Client.new s_token
 
-users_json = c.get_users
+resp = c.get_users
 
-c.edit_user user_id: users_json.first[:user_id],
+c.edit_user user_id: resp[:users].first[:user_id],
             email:   'youremail@example.org' 	 
 ```
 
