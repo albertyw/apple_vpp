@@ -1,3 +1,8 @@
+## 2.1.0
+
+### enhancement
+  * error class now interhits from AppleVPP::Error instead of StandardError
+  
 ## 2.0.0
 
 ### enhancements
