@@ -6,7 +6,7 @@ module AppleVPP
         return apple_hash.collect { |i| to_ruby i }
       end
       
-      keys_with_hashes = apple_hash.select { | _k, v | v.kind_of?( Hash ) }
+      keys_with_hashes = apple_hash.select { | _k, v | v.kind_of?( Hash ) || v.kind_of?( Array )}
 
       if keys_with_hashes.count > 0
         keys_with_hashes.each { |k, v| apple_hash[k] = to_ruby v }
