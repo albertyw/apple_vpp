@@ -1,3 +1,8 @@
+## 3.0.1
+
+### bug fixes
+  * `.client_config` method no longer raises an error.
+  
 ## 2.1.0
 
 ### enhancement

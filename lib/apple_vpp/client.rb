@@ -46,8 +46,9 @@ module AppleVPP
       }
 
       resp = request :client_config_srv_url, body
+      resp.delete('status')
 
-      AppleSerializer.to_ruby resp['clientContext']
+      AppleSerializer.to_ruby resp
     end
 
     def edit_user(params = {})
