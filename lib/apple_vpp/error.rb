@@ -1,3 +1,5 @@
+require 'time'
+
 module AppleVPP
   class Error < ::StandardError
 
@@ -7,6 +9,23 @@ module AppleVPP
 
     codes.each do |code|
       self.const_set "Code#{code}", ( Class.new AppleVPP::Error )
+    end
+
+    class ServiceUnavailable
+      attr_accessor :retry_after
+
+      def initialize retry_after
+        @retry_after = retry_after
+      end
+
+      def retry_in_seconds
+        if @retry_after == @retry_after.to_i.to_s
+          @retry_after
+        else
+          Time.parse(@retry_after) - Time.now
+        end
+      end
+
     end
 
   end
