@@ -65,6 +65,16 @@ module AppleVPP
       AppleSerializer.to_ruby resp['user']
     end
 
+    def get_assets(params = {})
+      body = {
+        'includeLicenseCounts' => params[:include_license_counts]
+      }
+
+      resp = request :get_vpp_assets_srv_url, body
+
+      AppleSerializer.to_ruby resp['assets']
+    end
+
     def get_licenses(params = {})
       licenses = []
       batch_token = nil
@@ -88,7 +98,7 @@ module AppleVPP
 
       end while batch_token
 
-      { 
+      {
         licenses:             AppleSerializer.to_ruby(licenses),
         since_modified_token: since_modified_token
       }
@@ -96,16 +106,44 @@ module AppleVPP
 
     def get_user(params = {})
       require_params [[:user_id, :client_user_id_str]], params
-     
+
       body = {
-        'userId'          => params[:user_id], 
-        'clientUserIdStr' => params[:client_user_id_str], 
+        'userId'          => params[:user_id],
+        'clientUserIdStr' => params[:client_user_id_str],
         'itsIdHash'       => params[:its_id_hash]
       }
 
       resp = request :get_user_srv_url, body
 
       AppleSerializer.to_ruby resp['user']
+    end
+
+    def manage_licenses_by_adam_id(params = {})
+      require_params [:adam_id_str, :pricing_param], params
+
+      unless params.has_key?(:associate_client_user_id_strs) ^
+             params.has_key?(:associate_serial_numbers) ^
+             params.has_key?(:disassociate_client_user_id_strs) ^
+             params.has_key?(:disassociate_license_id_strs)
+        raise ArgumentError, 'One and only one of these parameters may be provided: associate_client_user_id_strs, associate_serial_numbers, disassociate_client_user_id_strs, disassociate_license_id_strs.'
+      end
+
+      body = {
+        'adamIdStr'                    => params[:adam_id_str],
+        'associateClientUserIdStrs'    => params[:associate_client_user_id_strs],
+        'associateSerialNumbers'       => params[:associate_serial_numbers],
+        'disassociateClientUserIdStrs' => params[:disassociate_client_user_id_strs],
+        'disassociateLicenseIdStrs'    => params[:disassociate_license_id_strs],
+        'pricingParam'                 => params[:pricing_param],
+        'notifyDisassociation'         => params[:notify_disassociation]
+      }
+
+      resp = request :manage_vpp_licenses_by_adam_id_srv_url, body
+
+      ret = AppleSerializer.to_ruby resp
+      ret.delete(:status)
+
+      ret
     end
 
     def register_user(params = {})
@@ -117,7 +155,7 @@ module AppleVPP
       }
 
       resp = request :register_user_srv_url, body
-    
+
       AppleSerializer.to_ruby resp['user']
     end
 
@@ -153,21 +191,21 @@ module AppleVPP
 
         batch_token = resp['batchToken']
         since_modified_token = resp['sinceModifiedToken']
-      
+
       end while batch_token
 
-      { 
+      {
         users:                AppleSerializer.to_ruby(users),
         since_modified_token: since_modified_token
       }
     end
 
     private
-    
+
     # param_name_array is an array of required parameters. Include a sub-array of parameters for || requirement.
 
     def require_params param_name_array, params
-      param_name_array = [param_name_array] unless param_name_array.kind_of? Array 
+      param_name_array = [param_name_array] unless param_name_array.kind_of? Array
 
       param_name_array.each do |param_names|
         param_names = [param_names] unless param_names.kind_of?(Array)
@@ -179,7 +217,7 @@ module AppleVPP
             break
           end
         end
-        
+
         unless param_found
           raise ArgumentError, "#{param_names.join(' or ')} must be provided"
         end
