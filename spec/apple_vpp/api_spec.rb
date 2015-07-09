@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe AppleVPP::API do
+describe AppleVPP::Client do
 
 end
