@@ -83,6 +83,12 @@ Optional:
 
 * email
 
+## get_assets
+
+Optional:
+
+* include_license_counts
+
 ## get_licenses
 
 Optional:
@@ -108,6 +114,24 @@ Optional:
 
 * since_modified_token
 * include_retired
+
+## manage_licenses_by_adam_id_src
+
+Required:
+
+* adam_id_str
+* pricing_param
+
+One (and only one) of these are required:
+
+* associate_client_user_id_strs
+* associate_serial_numbers
+* disassociate_client_user_id_strs
+* disassociate_serial_numbers
+
+Optional:
+
+* notify_disassociation
 
 ## register_user
 

@@ -7,14 +7,18 @@ module AppleVPP
     def self.submit( url, s_token = nil, body = {} )
       body['sToken'] = s_token
       body.delete_if { |_k, v| v.nil? }
-
+require 'awesome_print'
+ap body
       begin
 
         resp = RestClient.post url, body, content_type: :json
 
       rescue RestClient::ExceptionWithResponse => e
 
-        unless e.response.code == 503 raise e
+        unless e.response.code == 503
+          raise e
+        end
+
         raise AppleVPP::Error::ServiceUnavailable.new(e.response.raw_headers['Retry-After'])
 
       end
