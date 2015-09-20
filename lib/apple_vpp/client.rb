@@ -71,6 +71,9 @@ module AppleVPP
       }
 
       resp = request :get_vpp_assets_srv_url, body
+      if resp == {"status"=>0}
+        resp = []
+      end
 
       AppleSerializer.to_ruby resp['assets']
     end
