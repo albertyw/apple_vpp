@@ -23,11 +23,15 @@ module AppleVPP
 
       json = JSON.parse(resp)
 
+      self.check_for_errors json
+
+      json
+    end
+
+    def self.check_for_errors json
       if json['status'] == -1
         raise (eval "AppleVPP::Error::Code#{json['errorNumber']}"), json['errorMessage']
       end
-
-      json
     end
 
   end
