@@ -1,7 +1,20 @@
+## 3.2.0 (2015-11-10)
+
+### Enhancement
+  * Refactoring, add tests
+  * Backfill changelog
+  * Set up rubocop
+
+### Bug fixes
+  * Correctly detect some error conditions
+  * Allow for unknown error codes
+
+
 ## 3.1.4 (2015-09-26)
 
 ### Bug fixes
   * Trivial fix
+
 
 ## 3.1.3 (broken) (2015-09-20)
 
