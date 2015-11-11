@@ -11,6 +11,10 @@ module AppleVPP
       self.const_set "Code#{code}", ( Class.new AppleVPP::Error )
     end
 
+    def self.get_error error_code
+      self.const_get "Code#{error_code}"
+    end
+
     class ServiceUnavailable
       attr_accessor :retry_after
 

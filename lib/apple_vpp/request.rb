@@ -31,16 +31,20 @@ module AppleVPP
     def self.check_for_errors json
       if json['status'] == -1
         if json.include? 'errorNumber'
-          raise (eval "AppleVPP::Error::Code#{json['errorNumber']}"), json['errorMessage']
+          self.raise_error json['errorNumber'], json['errorMessage']
         end
         if json.include? 'associations'
           json['associations'].each do |association|
             if association.include? 'errorCode'
-              raise (eval "AppleVPP::Error::Code#{association['errorCode']}"), association['errorMessage']
+              self.raise_error association['errorCode'], association['errorMessage']
             end
           end
         end
       end
+    end
+
+    def self.raise_error error_code, error_message
+      raise AppleVPP::Error.get_error(error_code), error_message
     end
 
   end
