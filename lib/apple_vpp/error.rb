@@ -7,8 +7,20 @@ module AppleVPP
               9610, 9611, 9612, 9613, 9614, 9615, 9616, 9617, 9618, 9619,
               9620, 9621, 9622, 9623, 9625, 9626 ]
 
+    def self.make_error error_code
+      self.const_set "Code#{error_code}", ( Class.new AppleVPP::Error )
+    end
+
     codes.each do |code|
-      self.const_set "Code#{code}", ( Class.new AppleVPP::Error )
+      self.make_error code
+    end
+
+    def self.get_error error_code
+      begin
+        self.const_get "Code#{error_code}"
+      rescue NameError
+        self.make_error error_code
+      end
     end
 
     class ServiceUnavailable
