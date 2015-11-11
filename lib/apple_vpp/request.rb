@@ -30,7 +30,16 @@ module AppleVPP
 
     def self.check_for_errors json
       if json['status'] == -1
-        raise (eval "AppleVPP::Error::Code#{json['errorNumber']}"), json['errorMessage']
+        if json.include? 'errorNumber'
+          raise (eval "AppleVPP::Error::Code#{json['errorNumber']}"), json['errorMessage']
+        end
+        if json.include? 'associations'
+          json['associations'].each do |association|
+            if association.include? 'errorCode'
+              raise (eval "AppleVPP::Error::Code#{association['errorCode']}"), association['errorMessage']
+            end
+          end
+        end
       end
     end
 
