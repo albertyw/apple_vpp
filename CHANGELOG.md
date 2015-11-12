@@ -1,3 +1,9 @@
+## 3.3.0 (2015-11-11)
+
+### Enhancement
+  * Ignore errors from licenses being already associated/disassociated
+  * Check for disassociation errors
+
 ## 3.2.0 (2015-11-10)
 
 ### Enhancement
