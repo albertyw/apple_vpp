@@ -3,6 +3,11 @@ require "json"
 
 module AppleVPP
   class Request
+    IGNORED_ERROR_CODES = [
+      '9602', # No license to disassociate
+      '9616', # License already assigned
+    ]
+
     def self.submit(url, s_token = nil, body = {})
       body["sToken"] = s_token
       body.delete_if { |_k, v| v.nil? }
@@ -42,6 +47,9 @@ module AppleVPP
         end
         associations.each do |association|
           if association.include? "errorCode"
+            if IGNORED_ERROR_CODES.include? association["errorCode"].to_s
+              next
+            end
             raise_error association["errorCode"], association["errorMessage"]
           end
         end

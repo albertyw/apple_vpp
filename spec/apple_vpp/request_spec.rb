@@ -27,5 +27,9 @@ describe AppleVPP::Request do
       data = { "disassociations" => [{ "errorMessage" => "Registered user not found", "errorCode" => 9609, "clientUserIdStr" => "1234" }], "status" => -1 }
       expect { AppleVPP::Request.check_for_errors data }.to raise_error(AppleVPP::Error::Code9609)
     end
+    it "will ignore errors from already associated/disassociated licenses" do
+      data = { "associations" => [{ "errorMessage" => "License already assigned user not found", "errorCode" => 9616, "clientUserIdStr" => "1234" }], "status" => -1 }
+      AppleVPP::Request.check_for_errors data
+    end
   end
 end
