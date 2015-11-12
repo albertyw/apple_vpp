@@ -32,11 +32,17 @@ module AppleVPP
         if json.include? "errorNumber"
           raise_error json["errorNumber"], json["errorMessage"]
         end
+
+        associations = []
         if json.include? "associations"
-          json["associations"].each do |association|
-            if association.include? "errorCode"
-              raise_error association["errorCode"], association["errorMessage"]
-            end
+          associations += json["associations"]
+        end
+        if json.include? "disassociations"
+          associations += json["disassociations"]
+        end
+        associations.each do |association|
+          if association.include? "errorCode"
+            raise_error association["errorCode"], association["errorMessage"]
           end
         end
       end

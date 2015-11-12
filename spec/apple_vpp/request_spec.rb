@@ -23,5 +23,9 @@ describe AppleVPP::Request do
       data = { "associations" => [{ "errorMessage" => "Registered user not found", "errorCode" => 9609, "clientUserIdStr" => "1234" }], "status" => -1 }
       expect { AppleVPP::Request.check_for_errors data }.to raise_error(AppleVPP::Error::Code9609)
     end
+    it "will raise an error for specific disassociations" do
+      data = { "disassociations" => [{ "errorMessage" => "Registered user not found", "errorCode" => 9609, "clientUserIdStr" => "1234" }], "status" => -1 }
+      expect { AppleVPP::Request.check_for_errors data }.to raise_error(AppleVPP::Error::Code9609)
+    end
   end
 end
