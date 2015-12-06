@@ -1,3 +1,10 @@
+## 3.3.1 (2015-12-05)
+
+### Enhancement
+  * Fix a few style errors
+  * Deprecate `associate_license_with_user`
+  * Deprecate `disassociate_license_from_user`
+
 ## 3.3.0 (2015-11-11)
 
 ### Enhancement
