@@ -4,8 +4,8 @@ require "json"
 module AppleVPP
   class Request
     IGNORED_ERROR_CODES = [
-      '9602', # No license to disassociate
-      '9616', # License already assigned
+      "9602", # No license to disassociate
+      "9616", # License already assigned
     ]
 
     def self.submit(url, s_token = nil, body = {})
