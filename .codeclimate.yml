@@ -8,3 +8,4 @@ engines:
     enabled: true
 ratings:
   paths:
+    - "**.rb"
