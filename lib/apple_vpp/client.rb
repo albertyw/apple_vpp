@@ -11,6 +11,7 @@ module AppleVPP
     end
 
     def associate_license_with_user(params = {})
+      warn "This request is deprecated.  Use manage_licenses_by_adam_id instead"
       require_params [[:user_id, :client_user_id_str], [:adam_id, :license_id]], params
 
       body = {
@@ -27,6 +28,7 @@ module AppleVPP
     end
 
     def disassociate_license_from_user(params = {})
+      warn "This request is deprecated.  Use manage_licenses_by_adam_id instead"
       require_params :license_id, params
 
       body = {
