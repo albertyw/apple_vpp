@@ -1,3 +1,3 @@
 module AppleVPP
-  VERSION = "3.3.1"
+  VERSION = "3.4.0"
 end

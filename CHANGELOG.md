@@ -1,3 +1,9 @@
+## 3.4.0 (2016-01-17)
+
+### Enhancement
+  * Support error code 9630 (cherry picked from https://github.com/tboyko/apple_vpp/commit/b47dcc82f4941ace298c4645819df1e4370814dd)
+  * Allow disassociating licenses by serial number
+
 ## 3.3.1 (2015-12-05)
 
 ### Enhancement
