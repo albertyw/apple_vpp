@@ -126,8 +126,9 @@ module AppleVPP
       unless params.has_key?(:associate_client_user_id_strs) ^
           params.has_key?(:associate_serial_numbers) ^
           params.has_key?(:disassociate_client_user_id_strs) ^
-          params.has_key?(:disassociate_license_id_strs)
-        raise ArgumentError, "One and only one of these parameters may be provided: associate_client_user_id_strs, associate_serial_numbers, disassociate_client_user_id_strs, disassociate_license_id_strs."
+          params.has_key?(:disassociate_license_id_strs) ^
+          params.has_key?(:disassociate_serial_numbers)
+        raise ArgumentError, "One and only one of these parameters may be provided: associate_client_user_id_strs, associate_serial_numbers, disassociate_client_user_id_strs, disassociate_license_id_strs, disassociate_serial_numbers."
       end
 
       body = {
@@ -136,6 +137,7 @@ module AppleVPP
         "associateSerialNumbers"       => params[:associate_serial_numbers],
         "disassociateClientUserIdStrs" => params[:disassociate_client_user_id_strs],
         "disassociateLicenseIdStrs"    => params[:disassociate_license_id_strs],
+        "disassociateSerialNumbers"    => params[:disassociate_serial_numbers],
         "pricingParam"                 => params[:pricing_param],
         "notifyDisassociation"         => params[:notify_disassociation],
       }

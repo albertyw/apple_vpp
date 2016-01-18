@@ -128,6 +128,7 @@ One (and only one) of these are required:
 * associate_client_user_id_strs
 * associate_serial_numbers
 * disassociate_client_user_id_strs
+* disassociate_license_id_strs
 * disassociate_serial_numbers
 
 Optional:
