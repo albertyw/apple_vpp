@@ -4,6 +4,7 @@
   * Support error code 9630 (cherry picked from https://github.com/tboyko/apple_vpp/commit/b47dcc82f4941ace298c4645819df1e4370814dd)
   * Allow disassociating licenses by serial number
 
+
 ## 3.3.1 (2015-12-05)
 
 ### Enhancement
@@ -11,11 +12,13 @@
   * Deprecate `associate_license_with_user`
   * Deprecate `disassociate_license_from_user`
 
+
 ## 3.3.0 (2015-11-11)
 
 ### Enhancement
   * Ignore errors from licenses being already associated/disassociated
   * Check for disassociation errors
+
 
 ## 3.2.0 (2015-11-10)
 
