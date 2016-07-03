@@ -1,3 +1,9 @@
+## 3.4.1 (2016-07-02)
+
+### Enhancement
+  * Upgrade to rest-client 2.0.0
+
+
 ## 3.4.0 (2016-01-17)
 
 ### Enhancement
