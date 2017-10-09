@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "apple_vpp"
   spec.version       = AppleVPP::VERSION
   spec.authors       = ["Taylor Boyko", "Cellabus, Inc."]
-  spec.email         = ["taylorboyko@gmail.com", "albert@cellabus.com"]
+  spec.email         = ["taylorboyko@gmail.com", "git@albertyw.com"]
   spec.description   = "Ruby bindings for the Apple VPP App Assignment API"
   spec.summary       = "Ruby bindings for the Apple VPP App Assignment API"
   spec.homepage      = ""

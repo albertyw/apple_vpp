@@ -3,11 +3,11 @@ apple_vpp
 
 This is an updated version of https://github.com/tboyko/apple_vpp
 
-[ ![Codeship Status for cellabus/apple_vpp](https://codeship.com/projects/422dc690-c7c8-0132-75b9-36013b770d7f/status?branch=master)](https://codeship.com/projects/74995)
-[![Code Climate](https://codeclimate.com/github/cellabus/apple_vpp/badges/gpa.svg)](https://codeclimate.com/github/cellabus/apple_vpp)
-[![Test Coverage](https://codeclimate.com/github/cellabus/apple_vpp/badges/coverage.svg)](https://codeclimate.com/github/cellabus/apple_vpp)
-[![Dependency Status](https://gemnasium.com/cellabus/apple_vpp.svg)](https://gemnasium.com/cellabus/apple_vpp)
-[![security](https://hakiri.io/github/cellabus/apple_vpp/master.svg)](https://hakiri.io/github/cellabus/apple_vpp/master)
+[ ![Codeship Status for albertyw/apple_vpp](https://codeship.com/projects/422dc690-c7c8-0132-75b9-36013b770d7f/status?branch=master)](https://codeship.com/projects/74995)
+[![Code Climate](https://codeclimate.com/github/albertyw/apple_vpp/badges/gpa.svg)](https://codeclimate.com/github/albertyw/apple_vpp)
+[![Test Coverage](https://codeclimate.com/github/albertyw/apple_vpp/badges/coverage.svg)](https://codeclimate.com/github/albertyw/apple_vpp)
+[![Dependency Status](https://gemnasium.com/albertyw/apple_vpp.svg)](https://gemnasium.com/albertyw/apple_vpp)
+[![security](https://hakiri.io/github/albertyw/apple_vpp/master.svg)](https://hakiri.io/github/albertyw/apple_vpp/master)
 
 Ruby bindings for the Apple VPP Managed App License Distribution API.
 
