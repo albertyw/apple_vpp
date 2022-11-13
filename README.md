@@ -6,8 +6,6 @@ This is an updated version of https://github.com/tboyko/apple_vpp
 [![Build Status](https://drone.albertyw.com/api/badges/albertyw/apple_vpp/status.svg)](https://drone.albertyw.com/albertyw/apple_vpp)
 [![Code Climate](https://codeclimate.com/github/albertyw/apple_vpp/badges/gpa.svg)](https://codeclimate.com/github/albertyw/apple_vpp)
 [![Test Coverage](https://codeclimate.com/github/albertyw/apple_vpp/badges/coverage.svg)](https://codeclimate.com/github/albertyw/apple_vpp)
-[![Dependency Status](https://gemnasium.com/albertyw/apple_vpp.svg)](https://gemnasium.com/albertyw/apple_vpp)
-[![security](https://hakiri.io/github/albertyw/apple_vpp/master.svg)](https://hakiri.io/github/albertyw/apple_vpp/master)
 
 Ruby bindings for the Apple VPP Managed App License Distribution API.
 
