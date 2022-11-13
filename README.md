@@ -3,7 +3,7 @@ apple_vpp
 
 This is an updated version of https://github.com/tboyko/apple_vpp
 
-[ ![Codeship Status for albertyw/apple_vpp](https://codeship.com/projects/422dc690-c7c8-0132-75b9-36013b770d7f/status?branch=master)](https://codeship.com/projects/74995)
+[![Build Status](https://drone.albertyw.com/api/badges/albertyw/apple_vpp/status.svg)](https://drone.albertyw.com/albertyw/apple_vpp)
 [![Code Climate](https://codeclimate.com/github/albertyw/apple_vpp/badges/gpa.svg)](https://codeclimate.com/github/albertyw/apple_vpp)
 [![Test Coverage](https://codeclimate.com/github/albertyw/apple_vpp/badges/coverage.svg)](https://codeclimate.com/github/albertyw/apple_vpp)
 [![Dependency Status](https://gemnasium.com/albertyw/apple_vpp.svg)](https://gemnasium.com/albertyw/apple_vpp)
